@@ -1,9 +1,13 @@
 //Authentication Service
 //Entry Point
-
+var secret = process.env.JWT_SECRET;
 //imports
 var restify = require('restify'),
-Logger = require('bunyan');
+Logger = require('bunyan'),
+corsMiddleware = require('restify-cors-middleware'),
+verifyToken = require('restify-jwt'),
+jwt = require('jsonwebtoken'),
+userHelper = require('./helpers/user.helper.js');
 
 //
 //
@@ -54,7 +58,7 @@ var log = new Logger.createLogger({
 //
 var server = restify.createServer({
   name:'user',
-  version:'0.0.1',
+  version:'0.0.2',
   //certificate:fs.readFileSync('../certificate'),
   //key:fs.readFileSync('../key')
   log:log
@@ -63,6 +67,17 @@ var server = restify.createServer({
 //use body parser to deal with JSON
 server.use(restify.bodyParser());
 server.use(restify.queryParser());
+server.use(restify.fullResponse());
+
+
+const cors = corsMiddleware({
+  preflighMaxAge: 5,
+  origins: ['*'],
+  allowHeaders: ['authorization']
+});
+server.pre(cors.preflight);
+server.use(cors.actual);
+
 
 //
 //
@@ -78,8 +93,8 @@ server.get("/version", function(req,res,next){
 
 
 var grpc = require("grpc");
-var authenticationDescriptor = grpc.load(__dirname + '/proto/user.proto').user;
-var authenticationClient = new authenticationDescriptor.UserService('service.authentication:1295', grpc.credentials.createInsecure());
+var accountDescriptor = grpc.load(__dirname + '/proto/account.proto').account;
+var accountClient = new accountDescriptor.AccountService('service.account:1295', grpc.credentials.createInsecure());
 
 
 //
@@ -89,7 +104,8 @@ var authenticationClient = new authenticationDescriptor.UserService('service.aut
 server.post("/login", function(req,res,next){
   //check if a username and password have been supplied
   if( req.body && req.body.username && req.body.password ){
-    authenticationClient.authenticateUser(req.body, function(err, response){
+
+    accountClient.authenticate(req.body, function(err, response){
       if(err)
       {
         server.log.error(err);
@@ -112,8 +128,9 @@ server.post("/login", function(req,res,next){
 //Create user request
 //
 server.post("/", function(req,res,next){
-  res.send("Create user - Not Implemented");
-  if( req.body.username
+  //res.send("Create user - Not Implemented");
+  if( req.body
+    && req.body.username
     && req.body.password
     && req.body.email ){
       var userToCreate = {};
@@ -121,9 +138,11 @@ server.post("/", function(req,res,next){
       userToCreate.password = req.body.password;
       userToCreate.email = req.body.email;
 
-    authenticationClient.createUser(userToCreate, function(err, response){
+    accountClient.create(userToCreate, function(err, response){
       if(err){
         server.log.error(err);
+        res.status(400);
+        res.send(err);
       }else{
         res.send(response);
       }
@@ -141,7 +160,7 @@ server.post("/", function(req,res,next){
 //
 //Delete user request
 //
-server.del("/:_id", function(req,res,next){
+server.del("/:_id", verifyToken({secret:secret}), function(req,res,next){
   res.send("Delete User - Not Implemented");
 });
 
@@ -149,7 +168,7 @@ server.del("/:_id", function(req,res,next){
 //
 //Update User
 //
-server.put("/:_id", function(req,res,next){
+server.put("/:_id", verifyToken({secret:secret}), function(req,res,next){
   res.send("Update User - Not Implemented");
 });
 
@@ -157,8 +176,17 @@ server.put("/:_id", function(req,res,next){
 //
 //Get User
 //
-server.get("/:_id", function(req,res,next){
-  res.send("Get User - Not Implemented // _id: " + req.params._id);
+server.get("/", verifyToken({secret: secret}), function(req,res,next){
+  var token = req.header('Authorization');
+  userHelper.getTokenContent(token, secret, function(err, decodedToken){
+    if(err){
+      res.status(400);
+      res.send(err);
+      return;
+    }
+    
+    res.send("decodedToken");
+  });
 });
 
 //
