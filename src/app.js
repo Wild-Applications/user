@@ -184,8 +184,16 @@ server.get("/", verifyToken({secret: secret}), function(req,res,next){
       res.send(err);
       return;
     }
-    
-    res.send("decodedToken");
+
+    var metadata = new grpc.Metadata();
+    metadata.add('authorization', userHelper.getRawToken(token));
+    accountClient.get({}, metadata, function(err, result){
+      if(err){
+        res.send(err)
+      }else{
+        res.send(result);
+      }
+    });
   });
 });
 

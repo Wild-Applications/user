@@ -4,19 +4,18 @@ package account;
 
 //Methods exposed to client
 service AccountService {
-  rpc get (GetRequest) returns (GetReply){}
+  rpc get (Empty) returns (GetReply){}
   rpc create (CreateRequest) returns (CreateReply){}
   rpc authenticate (AuthenticateRequest) returns (TokenReply){}
 }
 
 // Message Type definition for user
-message GetRequest {
-  string username = 1;
-  string password = 2;
+message Empty {
 }
 
 message GetReply {
-  int32 _id = 1;
+  string username = 1;
+  string email = 2;
 }
 
 message CreateRequest {

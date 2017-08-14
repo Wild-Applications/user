@@ -19,4 +19,10 @@ authenticator.getTokenContent = function(token, secret, callback){
   }
 }
 
+authenticator.getRawToken = function(token){
+  if(token.indexOf('Bearer ') != -1){
+    return token.substring( token.indexOf("Bearer ") + "Bearer ".length );
+  }
+}
+
 module.exports = authenticator;
