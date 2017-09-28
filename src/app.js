@@ -88,7 +88,7 @@ server.use(cors.actual);
 //return latest default version
 server.get("/version", function(req,res,next){
   server.log.info("Version Request");
-  res.send(server.name + " is running on v" + server.versions);
+  res.send(server.name + " is TESTING running on v" + server.versions);
 });
 
 
