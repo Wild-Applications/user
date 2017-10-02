@@ -155,6 +155,30 @@ server.post("/", function(req,res,next){
   }
 });
 
+server.post("/recover", function(req,res,next){
+  //res.send("Create user - Not Implemented");
+  if( req.body
+    && req.body.email ){
+      var existingUser = {};
+      existingUser.email = req.body.email;
+
+    accountClient.recover(existinerUser, function(err, response){
+      if(err){
+        server.log.error(err);
+        res.status(400);
+        res.send(err);
+      }else{
+        res.send(response);
+      }
+    });
+  }else{
+    var error = {message:'Not all parameters were supplied', code: '0007'};
+    res.status = 400;
+    server.log.error(error);
+    res.send(error);
+  }
+});
+
 
 //
 //
