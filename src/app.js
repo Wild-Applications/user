@@ -162,7 +162,7 @@ server.post("/recover", function(req,res,next){
       var existingUser = {};
       existingUser.email = req.body.email;
 
-    accountClient.recover(existinerUser, function(err, response){
+    accountClient.recover(existingUser, function(err, response){
       if(err){
         server.log.error(err);
         res.status(400);
