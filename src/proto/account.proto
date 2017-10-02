@@ -7,6 +7,7 @@ service AccountService {
   rpc get (Empty) returns (GetReply){}
   rpc create (CreateRequest) returns (CreateReply){}
   rpc authenticate (AuthenticateRequest) returns (TokenReply){}
+  rpc recover (RecoverRequest) returns (RecoverReply){}
 }
 
 // Message Type definition for user
@@ -25,7 +26,7 @@ message CreateRequest {
 }
 
 message CreateReply {
-  int32 _id = 1;
+  string token = 1;
 }
 
 message AuthenticateRequest {
@@ -35,4 +36,12 @@ message AuthenticateRequest {
 
 message TokenReply {
   string token = 1;
+}
+
+message RecoverRequest {
+  string email = 1;
+}
+
+message RecoverReply {
+  bool result = 1;
 }
