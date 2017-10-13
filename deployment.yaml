@@ -31,6 +31,7 @@ spec:
       containers:
       - name: user
         image: wildapplications/user:latest
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
         env:
