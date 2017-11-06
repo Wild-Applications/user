@@ -104,7 +104,7 @@ var accountClient = new accountDescriptor.AccountService('service.account:1295',
 server.post("/login", function(req,res,next){
   //check if a username and password have been supplied
   if( req.body && req.body.username && req.body.password ){
-
+    req.body.accountType = "CLIENT";
     accountClient.authenticate(req.body, function(err, response){
       if(err)
       {
@@ -137,6 +137,7 @@ server.post("/", function(req,res,next){
       userToCreate.username = req.body.username;
       userToCreate.password = req.body.password;
       userToCreate.email = req.body.email;
+      userToCreate.accountType = "CLIENT";
 
     accountClient.create(userToCreate, function(err, response){
       if(err){
