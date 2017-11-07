@@ -96,6 +96,12 @@ var grpc = require("grpc");
 var accountDescriptor = grpc.load(__dirname + '/proto/account.proto').account;
 var accountClient = new accountDescriptor.AccountService('service.account:1295', grpc.credentials.createInsecure());
 
+var premisesDescriptor = grpc.load(__dirname + '/proto/premises.proto').premises;
+var premisesClient = new premisesDescriptor.PremisesService('service.premises:1295', grpc.credentials.createInsecure());
+
+var paymentDescriptor = grpc.load(__dirname + '/proto/payment.proto').payment;
+var paymentClient = new paymentDescriptor.PaymentService('service.payment:1295', grpc.credentials.createInsecure());
+
 
 //
 //
@@ -198,7 +204,44 @@ server.post("/reset", function(req,res,next){
         }
       });
     }
-})
+});
+
+server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
+  var premisesExists = false;
+  var paymentInfoExists = false;
+  //need to verify that the account is setup
+  //check premises exists, check payment info exists
+  var token = req.header('Authorization');
+  userHelper.getTokenContent(token, secret, function(err, decodedToken){
+    if(err){
+      res.status(400);
+      res.send(err);
+      return;
+    }
+
+    var metadata = new grpc.Metadata();
+    metadata.add('authorization', userHelper.getRawToken(token));
+    premisesClient.get({}, metadata, function(err, result){
+      if(err){
+        res.send(err);
+      }else{
+        if(result != null && result._id != null){
+          premisesExists = true;
+        }
+        paymentClient.get({}, metadata, function(err, paymentResult){
+          if(err){
+            res.send(err);
+          }else{
+            if(result != null){
+              paymentInfoExists = true;
+            }
+            res.send({premises: premisesExists, payment: paymentInfoExists});
+          }
+        })
+      }
+    });
+  });
+});
 
 //
 //
