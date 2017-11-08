@@ -255,6 +255,7 @@ server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
             if(err){return reject(err)}
             var hasActive = false;
             var hasMenu = false;
+            console.log(results);
             if(results.length != 0){
               hasMenu = true;
               for(var menuKey in results){
