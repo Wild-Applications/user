@@ -240,7 +240,7 @@ server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
         paymentClient.get({}, metadata, function(err, results){
           if(err){return reject(err);}
           if(results){
-            return resolve(true;)
+            return resolve(true);
           }
           return resolve(false);
         });
