@@ -210,7 +210,7 @@ server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
   var premisesExists = false;
   var paymentInfoExists = false;
   //need to verify that the account is setup
-  //check premises exists, check payment info exists
+  //check premises exists, check payment info exists, menu, active menu
   var token = req.header('Authorization');
   userHelper.getTokenContent(token, secret, function(err, decodedToken){
     if(err){
@@ -221,27 +221,70 @@ server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
 
     var metadata = new grpc.Metadata();
     metadata.add('authorization', userHelper.getRawToken(token));
-    premisesClient.get({}, metadata, function(err, result){
-      if(err){
-        res.send(err);
-      }else{
-        if(result != null && result._id != null){
-          premisesExists = true;
-        }
-        paymentClient.get({}, metadata, function(err, paymentResult){
-          if(err){
-            res.send(err);
-          }else{
-            if(result != null){
-              paymentInfoExists = true;
-            }
-            res.send({premises: premisesExists, payment: paymentInfoExists});
-          }
-        })
-      }
-    });
+
+    var requests = [];
+
+    var premisesCall = function(metadata){
+      return new Promise(function(resolve, reject){
+        premisesClient.get({}, metadata, function(err, results){
+          if(err){return reject(err);}
+          return resolve(true);
+        });
+      });
+    }
+    var paymentCall = function(metadata){
+      return new Promise(function(resolve, reject){
+        paymentClient.get({}, metadata, function(err, results){
+          if(err){return reject(err);}
+          return resolve(true);
+        });
+      });
+    }
+    requests[requests.length] = premisesCall(metadata);
+    requests[requests.length] = paymentCall(metadata);
+    Promise.all(requests).then(allData => {
+      var returnObj = {};
+      returnObj.premises = allData[0];
+      returnObj.payment = allData[1];
+      return callback(null, returnObj);
+    }, error => {
+      callback({message:JSON.stringify(error),null);
+    })
   });
 });
+
+// function getProducts(contentsObj, metadata){
+//
+//
+//   var productsCall = function(section, metadata){
+//     return new Promise(function(resolve, reject){
+//       productClient.getBatch(section.products, metadata, function(err, results){
+//         if(err){return reject(err)}
+//         section.products = results;
+//         var test = {};
+//         test.title = section.title;
+//         test.products = results.products;
+//         console.log("Results " + JSON.stringify(results));
+//         return resolve(test);
+//       });
+//     })
+//   }
+//
+//
+//   var requests = [];
+//   contentsObj.forEach(function(section){
+//     for(var i=0;i<section.products.length;i++){
+//       section.products[i] = section.products[i].toString();
+//     }
+//     requests[requests.length] = productsCall(section, metadata);
+//   })
+//   //return requests;
+//
+//   return Promise.all(requests);
+// }
+
+
+
 
 //
 //
