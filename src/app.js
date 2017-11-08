@@ -246,42 +246,13 @@ server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
       var returnObj = {};
       returnObj.premises = allData[0];
       returnObj.payment = allData[1];
-      return callback(null, returnObj);
+      res.send(returnObj);
     }, error => {
-      callback({message:JSON.stringify(error),null);
+      res.send(error);
     })
   });
 });
 
-// function getProducts(contentsObj, metadata){
-//
-//
-//   var productsCall = function(section, metadata){
-//     return new Promise(function(resolve, reject){
-//       productClient.getBatch(section.products, metadata, function(err, results){
-//         if(err){return reject(err)}
-//         section.products = results;
-//         var test = {};
-//         test.title = section.title;
-//         test.products = results.products;
-//         console.log("Results " + JSON.stringify(results));
-//         return resolve(test);
-//       });
-//     })
-//   }
-//
-//
-//   var requests = [];
-//   contentsObj.forEach(function(section){
-//     for(var i=0;i<section.products.length;i++){
-//       section.products[i] = section.products[i].toString();
-//     }
-//     requests[requests.length] = productsCall(section, metadata);
-//   })
-//   //return requests;
-//
-//   return Promise.all(requests);
-// }
 
 
 
