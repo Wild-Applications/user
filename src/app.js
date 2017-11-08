@@ -256,10 +256,10 @@ server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
             var hasActive = false;
             var hasMenu = false;
             console.log(results);
-            if(results.length != 0){
+            if(results.menus.length != 0){
               hasMenu = true;
-              for(var menuKey in results){
-                if(results[menuKey].active){
+              for(var menuKey in results.menus){
+                if(results.menus[menuKey].active){
                   hasActive = true;
                   break;
                 }
