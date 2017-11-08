@@ -228,7 +228,10 @@ server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
       return new Promise(function(resolve, reject){
         premisesClient.get({}, metadata, function(err, results){
           if(err){return reject(err);}
-          return resolve(true);
+          if(results){
+            return resolve(true);
+          }
+          return resolve(false);
         });
       });
     }
@@ -236,16 +239,44 @@ server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
       return new Promise(function(resolve, reject){
         paymentClient.get({}, metadata, function(err, results){
           if(err){return reject(err);}
-          return resolve(true);
+          if(results){
+            return resolve(true;)
+          }
+          return resolve(false);
         });
       });
     }
+    var menuCall = function(metadata){
+      return new Promise(function(resolve, reject){
+        menuClient.getAll({}, metadata, function(err, results){
+            if(err){return reject(err)}
+            var hasActive = false;
+            var hasMenu = false;
+            if(results.length != 0){
+              hasMenu = true;
+              for(var menuKey in results){
+                if(results[menuKey].active){
+                  hasActive = true;
+                  break;
+                }
+              }
+            }
+
+            return resolve({menu: hasMenu, active: hasActive});
+        });
+      });
+    }
+
+
     requests[requests.length] = premisesCall(metadata);
     requests[requests.length] = paymentCall(metadata);
+    requests[requests.length] = menuCall(metadata);
     Promise.all(requests).then(allData => {
       var returnObj = {};
       returnObj.premises = allData[0];
       returnObj.payment = allData[1];
+      returnObj.menu = allData[2].menu;
+      returnObj.active = allData[2].active;
       res.send(returnObj);
     }, error => {
       res.send(error);
