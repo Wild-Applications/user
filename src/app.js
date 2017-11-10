@@ -166,7 +166,7 @@ server.post("/", function(req,res,next){
 });
 
 server.post("/username", function(req,res,next){
-  if(req.body && req.username){
+  if(req.body && req.body.username){
     var usernameToCheck = {username: req.username};
     accountClient.checkUsername(usernameToCheck, function(error, resultCheck){
       if(error){
