@@ -170,7 +170,7 @@ server.post("/username", function(req,res,next){
     var usernameToCheck = {username: req.username};
     accountClient.checkUsername(usernameToCheck, function(error, resultCheck){
       if(error){
-        res.status = error.error.status || 500;
+        res.status = error.status || 500;
         server.error.log(error);
         res.send(error);
       }else{
