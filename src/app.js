@@ -127,7 +127,6 @@ server.post("/login", function(req,res,next){
   }else{
     var error = {message:'Username or Password was not supplied', code: '0006'};
     res.status(400);
-    server.log.error(error);
     res.send(error);
   }
 });
@@ -150,7 +149,6 @@ server.post("/", function(req,res,next){
 
     accountClient.create(userToCreate, function(err, response){
       if(err){
-        server.log.error(err);
         res.status(400);
         res.send(err);
       }else{
@@ -180,7 +178,6 @@ server.post("/username", function(req,res,next){
   }else{
     var error = {message:"Not all parameters were supplied"};
     res.status = 400;
-    server.log.error(error);
     res.send(error);
   }
 });
