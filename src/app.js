@@ -165,6 +165,26 @@ server.post("/", function(req,res,next){
   }
 });
 
+server.post("/username", function(req,res,next){
+  if(req.body && req.username){
+    var usernameToCheck = {username: req.username};
+    accountClient.checkUsername(usernameToCheck, function(error, resultCheck){
+      if(error){
+        res.status = error.error.status || 500;
+        server.error.log(error);
+        res.send(error);
+      }else{
+        res.send(resultCheck);
+      }
+    });
+  }else{
+    var error = {message:"Not all parameters were supplied"};
+    res.status = 400;
+    server.log.error(error);
+    res.send(error);
+  }
+});
+
 server.post("/recover", function(req,res,next){
   //res.send("Create user - Not Implemented");
   if( req.body
