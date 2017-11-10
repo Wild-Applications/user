@@ -169,7 +169,7 @@ server.post("/username", function(req,res,next){
     accountClient.checkUsername(usernameToCheck, function(error, resultCheck){
       if(error){
         res.status = error.status || 500;
-        server.error.log(error);
+        
         res.send(error);
       }else{
         res.send(resultCheck);
