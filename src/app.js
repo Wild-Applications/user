@@ -207,7 +207,7 @@ server.post("/recover", function(req,res,next){
 
 server.post("/recover/:guid", function(req,res,next){
     if(req.params.guid && req.body.password){
-      accountClient.resetPassword({hash: req.params.guid, password: req.body.password}, function(err, result){
+      accountClient.resetPassword({guid: req.params.guid, password: req.body.password}, function(err, result){
         callback(null, null);
       })
     }else{
