@@ -207,14 +207,15 @@ server.post("/recover", function(req,res,next){
 
 server.post("/reset", function(req,res,next){
   if(req.body
-    && req.body.guid
-    && req.body.newPassword){
+    && req.body.verification
+    && req.body.password){
       var passwordReset = {};
-      passwordReset.guid = call.body.guid;
-      passwordReset.password = call.body.newPassword;
+      passwordReset.verfication = call.body.verification;
+      passwordReset.password = call.body.password;
 
       accountClient.resetPassword(passwordReset, function(err, response){
         if(err){
+          server.log.error(err);
           res.status(400);
           res.send(err);
         }else{
