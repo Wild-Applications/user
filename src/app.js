@@ -210,7 +210,7 @@ server.post("/reset", function(req,res,next){
     && req.body.guid
     && req.body.newPassword){
       var passwordReset = {};
-      passwordReset.verfication = call.body.verification;
+      passwordReset.guid = call.body.guid;
       passwordReset.password = call.body.newPassword;
 
       accountClient.resetPassword(passwordReset, function(err, response){
