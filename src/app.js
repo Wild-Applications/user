@@ -208,7 +208,7 @@ server.post("/recover", function(req,res,next){
 server.post("/recover/:guid", function(req,res,next){
     if(req.params.guid && req.body.password){
       accountClient.resetPassword({guid: req.params.guid, password: req.body.password}, function(err, result){
-        callback(null, null);
+        res.send({});
       })
     }else{
       var error = {message:'Not all parameters were supplied', code: '0007'};
