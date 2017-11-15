@@ -206,10 +206,12 @@ server.post("/recover", function(req,res,next){
 });
 
 server.post("recover/:guid", function(req, res, next){
+  console.log('getting here');
   if(req.params.guid && req.body.password){
     accountClient.resetPassword({guid: req.params.guid, password:req.body.password}, function(err, response){
       if(err){
         err = JSON.stringify(err);
+        console.log(err);
         res.status = err.error.status;
         res.send(err);
       }else{
