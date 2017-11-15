@@ -205,36 +205,6 @@ server.post("/recover", function(req,res,next){
   }
 });
 
-server.post("/recover/:guid", function(req,res,next){
-    if(req.params.guid && req.body.password){
-      accountClient.resetPassword({guid: req.params.guid, password: req.body.password}, function(err, result){
-        res.send({});
-      })
-    }else{
-      var error = {message:'Not all parameters were supplied', code: '0007'};
-      res.status = 400;
-      res.send(error);
-    }
-});
-
-server.post("/reset", verifyToken({secret:secret}), function(req,res,next){
-  if(req.body
-    && req.body.verification
-    && req.body.password){
-      var passwordReset = {};
-      passwordReset.password = call.body.password;
-
-      accountClient.resetPassword(passwordReset, function(err, response){
-        if(err){
-          server.log.error(err);
-          res.status(400);
-          res.send(err);
-        }else{
-          res.send(response);
-        }
-      });
-    }
-});
 
 server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
   var premisesExists = false;
