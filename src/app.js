@@ -205,6 +205,31 @@ server.post("/recover", function(req,res,next){
   }
 });
 
+server.post("recover/:guid", function(req, res, next){
+  if(req.params.guid && req.body.password){
+    accountClient.resetPassword({guid: req.params.guid, password:req.body.password}, function(err, response){
+      if(err){
+        err = JSON.stringify(err);
+        res.status = err.error.status;
+        res.send(err);
+      }else{
+        if(response.successful){
+          res.status = 200;
+          res.send();
+        }else{
+          res.status = 401;
+          res.send();
+        }
+      }
+    });
+  }else{
+    var error = {message:'Not all parameters were supplied', code: '0007'};
+    res.status = 400;
+    server.log.error(error);
+    res.send(error);
+  }
+});
+
 
 server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
   var premisesExists = false;
