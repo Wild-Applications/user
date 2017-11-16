@@ -210,9 +210,9 @@ server.post("recover/:guid", function(req, res, next){
   if(req.params.guid && req.body.password){
     accountClient.resetPassword({guid: req.params.guid, password:req.body.password}, function(err, response){
       if(err){
-        err = JSON.stringify(err.error);
+        //err = JSON.stringify(err.error);
         console.log(err);
-        res.status = err.error.status;
+        res.status = err.status;
         res.send(err);
       }else{
         if(response.successful){
