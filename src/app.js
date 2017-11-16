@@ -211,10 +211,11 @@ server.post("recover/:guid", function(req, res, next){
     accountClient.resetPassword({guid: req.params.guid, password:req.body.password}, function(err, response){
       if(err){
         //err = JSON.stringify(err.error);
-        console.log(err);
+        console.log("error", err);
         res.status = err.status;
         res.send(err);
       }else{
+        console.log("response", response);
         if(response.successful){
           res.status = 200;
           res.send();
