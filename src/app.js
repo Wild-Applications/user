@@ -11,11 +11,11 @@ userHelper = require('./helpers/user.helper.js');
 
 
 var codes = [
-  grpc.status.INTERNAL: 400,
-  grpc.status.UNAUTHENTICATED: 401,
-  grpc.status.PERMISSION_DENIED: 403,
-  grpc.status.UNIMPLEMENTED: 404,
-  grpc.status.UNAVAILABLE: 500,
+  'INTERNAL': 400,
+  'UNAUTHENTICATED': 401,
+  'PERMISSION_DENIED': 403,
+  'UNIMPLEMENTED': 404,
+  'UNAVAILABLE': 500,
 ];
 
 //
