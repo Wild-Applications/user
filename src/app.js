@@ -9,6 +9,15 @@ verifyToken = require('restify-jwt'),
 jwt = require('jsonwebtoken'),
 userHelper = require('./helpers/user.helper.js');
 
+
+var codes = {
+  grpc.status.INTERNAL: 400,
+  grpc.status.UNAUTHENTICATED: 401,
+  grpc.status.PERMISSION_DENIED: 403,
+  grpc.status.UNIMPLEMENTED: 404,
+  grpc.status.UNAVAILABLE: 500,
+};
+
 //
 //
 //Logging setup
@@ -118,8 +127,8 @@ server.post("/login", function(req,res,next){
       if(err)
       {
         server.log.error(err);
-        res.status(err.code || 401);
-        console.log(err;
+        res.status(codes[err.code] || 500);
+        console.log(err);
         res.send(err);
       }else{
         res.send(response);
