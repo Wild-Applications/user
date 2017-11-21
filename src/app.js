@@ -10,13 +10,13 @@ jwt = require('jsonwebtoken'),
 userHelper = require('./helpers/user.helper.js');
 
 
-var codes = [
+var codes = {
   'INTERNAL': 400,
   'UNAUTHENTICATED': 401,
   'PERMISSION_DENIED': 403,
   'UNIMPLEMENTED': 404,
   'UNAVAILABLE': 500,
-];
+};
 
 //
 //
