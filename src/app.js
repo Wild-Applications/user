@@ -127,8 +127,8 @@ server.post("/login", function(req,res,next){
       if(err)
       {
         server.log.error(err);
-        res.status(codes[err.code] || 500);
-        console.log(err);
+        res.status(err.code || 500);
+        console.log(err.code);
         res.send(err);
       }else{
         res.send(response);
