@@ -10,13 +10,13 @@ jwt = require('jsonwebtoken'),
 userHelper = require('./helpers/user.helper.js');
 
 
-var codes = {
+var codes = [
   grpc.status.INTERNAL: 400,
   grpc.status.UNAUTHENTICATED: 401,
   grpc.status.PERMISSION_DENIED: 403,
   grpc.status.UNIMPLEMENTED: 404,
   grpc.status.UNAVAILABLE: 500,
-};
+];
 
 //
 //
