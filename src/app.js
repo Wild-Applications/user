@@ -118,7 +118,8 @@ server.post("/login", function(req,res,next){
       if(err)
       {
         server.log.error(err);
-        res.status(401);
+        res.status(err.code || 401);
+        console.log(err;
         res.send(err);
       }else{
         res.send(response);
