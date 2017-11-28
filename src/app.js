@@ -128,7 +128,6 @@ server.post("/login", function(req,res,next){
       {
         server.log.error(err);
         res.status(err.code || 500);
-        console.log(err.code);
         res.send(err);
       }else{
         res.send(response);
@@ -215,7 +214,7 @@ server.post("/recover", function(req,res,next){
   }
 });
 
-server.post("recover/:guid", function(req, res, next){
+server.post("/recover/:guid", function(req, res, next){
   console.log('getting here');
   if(req.params.guid && req.body.password){
     accountClient.resetPassword({guid: req.params.guid, password:req.body.password}, function(err, response){
@@ -240,6 +239,25 @@ server.post("recover/:guid", function(req, res, next){
     res.status = 400;
     server.log.error(error);
     res.send(error);
+  }
+});
+
+server.post("/password/reset", verifyToken({secret:secret}), (req, res, next) => {
+  if(req.body && req.password && req.new){
+    var metadata = new grpc.Metadata();
+    metadata.add('authorization', userHelper.getRawToken(token));
+    accountClient.changePassword({original: req.body.password, new: req.body.new}, metadata, (err, response){
+      if(err){
+        res.status(err.code || 500);
+        res.send(err);
+      }else{
+        res.status(204);
+        res.send();
+      }
+    })
+  }else{
+    res.status(400);
+    res.send({message: "Not all parameters were supplied"});
   }
 });
 
