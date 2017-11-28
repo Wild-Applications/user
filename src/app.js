@@ -246,7 +246,7 @@ server.post("/password/reset", verifyToken({secret:secret}), (req, res, next) =>
   if(req.body && req.password && req.new){
     var metadata = new grpc.Metadata();
     metadata.add('authorization', userHelper.getRawToken(token));
-    accountClient.changePassword({original: req.body.password, new: req.body.new}, metadata, (err, response){
+    accountClient.changePassword({original: req.body.password, new: req.body.new}, metadata, (err, response) => {
       if(err){
         res.status(err.code || 500);
         res.send(err);
