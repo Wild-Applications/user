@@ -243,7 +243,7 @@ server.post("/recover/:guid", function(req, res, next){
 });
 
 server.post("/password/reset", verifyToken({secret:secret}), (req, res, next) => {
-  if(req.body && req.password && req.new){
+  if(req.body && req.body.password && req.body.new){
     var metadata = new grpc.Metadata();
     metadata.add('authorization', userHelper.getRawToken(token));
     accountClient.changePassword({original: req.body.password, new: req.body.new}, metadata, (err, response) => {
