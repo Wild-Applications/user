@@ -3,6 +3,7 @@
 var secret = process.env.JWT_SECRET;
 //imports
 var restify = require('restify'),
+restifyPlugins = require('restify-plugins'),
 Logger = require('bunyan'),
 corsMiddleware = require('restify-cors-middleware'),
 verifyToken = require('restify-jwt'),
@@ -74,9 +75,9 @@ var server = restify.createServer({
 });
 
 //use body parser to deal with JSON
-server.use(restify.bodyParser());
-server.use(restify.queryParser());
-server.use(restify.fullResponse());
+server.use(restifyPlugins.bodyParser());
+server.use(restifyPlugins.queryParser());
+server.use(restifyPlugins.fullResponse());
 
 
 const cors = corsMiddleware({
