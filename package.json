@@ -16,6 +16,7 @@
     "restify": "6.3.4",
     "restify-cors-middleware": "^1.0.1",
     "restify-jwt": "^0.4.0",
-    "restify-router": "^0.4.2"
+    "restify-router": "^0.4.2",
+    "restify-plugins": "1.6.0"
   }
 }
