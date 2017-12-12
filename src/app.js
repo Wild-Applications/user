@@ -128,8 +128,10 @@ server.post("/login", function(req,res,next){
       if(err)
       {
         server.log.error(err);
+        console.log('message',err.message);
+        console.log('code',err.code);
         res.status(err.code || 500);
-        res.send(err);
+        res.send(err.message);
       }else{
         res.send(response);
       }
