@@ -128,8 +128,6 @@ server.post("/login", function(req,res,next){
       if(err)
       {
         server.log.error(err);
-        console.log('message',err.message);
-        console.log('code',err.code);
         res.status(err.code || 500);
         res.send(err.message);
       }else{
@@ -218,16 +216,13 @@ server.post("/recover", function(req,res,next){
 });
 
 server.post("/recover/:guid", function(req, res, next){
-  console.log('getting here');
   if(req.params.guid && req.body.password){
     accountClient.resetPassword({guid: req.params.guid, password:req.body.password}, function(err, response){
       if(err){
         //err = JSON.stringify(err.error);
-        console.log("error", err);
         res.status = err.status;
         res.send(err);
       }else{
-        console.log("response", response);
         if(response.successful){
           res.status = 200;
           res.send();
@@ -312,7 +307,6 @@ server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
             if(err){return reject(err)}
             var hasActive = false;
             var hasMenu = false;
-            console.log(results);
             if(results.menus.length != 0){
               hasMenu = true;
               for(var menuKey in results.menus){
