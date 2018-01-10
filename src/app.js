@@ -282,7 +282,12 @@ server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
     var premisesCall = function(metadata){
       return new Promise(function(resolve, reject){
         premisesClient.get({}, metadata, function(err, results){
-          if(err){console.log(err);return reject(err);}
+          if(err){
+            if(err.code == 404){
+              return resolve(false;)
+            }
+            return reject(err)
+          }
           if(results){
             return resolve(true);
           }
@@ -300,9 +305,8 @@ server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
             }
             return reject(err);
           }
-          console.log('results',results);
           if(results){
-            
+
             return resolve(true);
           }
           return resolve(false);
