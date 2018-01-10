@@ -294,6 +294,7 @@ server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
       return new Promise(function(resolve, reject){
         paymentClient.get({}, metadata, function(err, results){
           if(err){console.log('payment', err);return reject(err);}
+          console.log('results',results);
           if(results){
             return resolve(true);
           }
