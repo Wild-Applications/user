@@ -284,7 +284,7 @@ server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
         premisesClient.get({}, metadata, function(err, results){
           if(err){
             if(err.code == 404){
-              return resolve(false;)
+              return resolve(false);
             }
             return reject(err)
           }
@@ -316,7 +316,12 @@ server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
     var menuCall = function(metadata){
       return new Promise(function(resolve, reject){
         menuClient.getAll({}, metadata, function(err, results){
-            if(err){console.log('menu', err);return reject(err)}
+            if(err){
+              if(err.code){
+                return resolve(false);
+              }
+              return reject(err)
+            }
             var hasActive = false;
             var hasMenu = false;
             if(results.menus.length != 0){
