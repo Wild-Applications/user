@@ -302,6 +302,7 @@ server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
           }
           console.log('results',results);
           if(results){
+            
             return resolve(true);
           }
           return resolve(false);
