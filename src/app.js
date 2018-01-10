@@ -293,7 +293,13 @@ server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
     var paymentCall = function(metadata){
       return new Promise(function(resolve, reject){
         paymentClient.get({}, metadata, function(err, results){
-          if(err){console.log('payment', err);return reject(err);}
+          if(err){
+            if(err.code == 404){
+              //premises was not found
+              return resolve(false);
+            }
+            return reject(err);
+          }
           console.log('results',results);
           if(results){
             return resolve(true);
