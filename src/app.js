@@ -293,7 +293,7 @@ server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
     var paymentCall = function(metadata){
       return new Promise(function(resolve, reject){
         paymentClient.get({}, metadata, function(err, results){
-          if(err){console.log(err);return reject(err);}
+          if(err){console.log('payment', err);return reject(err);}
           if(results){
             return resolve(true);
           }
@@ -304,7 +304,7 @@ server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
     var menuCall = function(metadata){
       return new Promise(function(resolve, reject){
         menuClient.getAll({}, metadata, function(err, results){
-            if(err){console.log(err);return reject(err)}
+            if(err){console.log('menu', err);return reject(err)}
             var hasActive = false;
             var hasMenu = false;
             if(results.menus.length != 0){
