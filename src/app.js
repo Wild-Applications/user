@@ -351,6 +351,7 @@ server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
       returnObj.active = allData[2].active;
       res.send(returnObj);
     }, error => {
+      console.log(error);
       res.send(error);
     })
   });
