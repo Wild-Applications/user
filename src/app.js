@@ -165,7 +165,7 @@ server.post("/", function(req,res,next){
       if(err){
         console.log(err);
         res.status(400);
-        res.send(err);
+        res.send({message: err.message});
       }else{
         res.send(response);
       }
