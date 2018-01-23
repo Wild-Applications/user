@@ -143,7 +143,6 @@ server.post("/login", function(req,res,next){
 });
 
 //
-//
 //Create user request
 //
 server.post("/", function(req,res,next){
