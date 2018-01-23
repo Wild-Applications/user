@@ -190,8 +190,9 @@ server.post("/username", function(req,res,next){
       }
     });
   }else{
-    var error = {message:"Not all parameters were supplied"};
-    res.status = 400;
+    var error = errors['0002'];
+    res.status(error.code || 500);
+    server.log.error(error);
     res.send(error);
   }
 });
