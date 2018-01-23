@@ -163,6 +163,7 @@ server.post("/", function(req,res,next){
 
     accountClient.create(userToCreate, function(err, response){
       if(err){
+        console.log(err);
         res.status(400);
         res.send(err);
       }else{
