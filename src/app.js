@@ -171,7 +171,7 @@ server.post("/", function(req,res,next){
     });
   }else{
     var error = errors['0001'];
-    res.status = error.code || 500;
+    res.status(error.code || 500);
     server.log.error(error);
     res.send(error);
   }
