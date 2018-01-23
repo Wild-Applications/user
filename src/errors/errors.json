@@ -1,4 +1,5 @@
 {
   "0001": {"message": "Username, email and password must be supplied", "code": 400},
-  "0002": {"message": "Username was not supplied", "code": 400}
+  "0002": {"message": "Username was not supplied", "code": 400},
+  "0003": {"message": "Username or password did not match", "code": 401}
 }

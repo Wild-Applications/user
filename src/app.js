@@ -130,14 +130,15 @@ server.post("/login", function(req,res,next){
       {
         server.log.error(err);
         res.status(err.code || 500);
-        res.send(err.message);
+        res.send({message:err.message});
       }else{
         res.send(response);
       }
     });
   }else{
-    var error = {message:'Username or Password was not supplied', code: '0006'};
-    res.status(400);
+    var error = errors['0003'];
+    res.status(error.code || 500);
+    server.log.error(error);
     res.send(error);
   }
 });
