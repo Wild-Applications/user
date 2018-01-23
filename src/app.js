@@ -182,8 +182,8 @@ server.post("/username", function(req,res,next){
     var usernameToCheck = {username: req.body.username};
     accountClient.checkUsername(usernameToCheck, function(error, resultCheck){
       if(error){
-        res.status = error.status || 500;
-        res.send(error);
+        res.status(error.status || 500);
+        res.send({message:error.message});
       }else{
         res.send(resultCheck);
       }
