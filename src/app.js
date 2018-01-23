@@ -8,7 +8,8 @@ Logger = require('bunyan'),
 corsMiddleware = require('restify-cors-middleware'),
 verifyToken = require('restify-jwt-community'),
 jwt = require('jsonwebtoken'),
-userHelper = require('./helpers/user.helper.js');
+userHelper = require('./helpers/user.helper.js'),
+errors = require('./errors/errors.json');
 
 
 var codes = {
@@ -150,7 +151,10 @@ server.post("/", function(req,res,next){
   if( req.body
     && req.body.username
     && req.body.password
-    && req.body.email ){
+    && req.body.email
+    && req.body.username != ""
+    && req.body.password != ""
+    && req.body.email != ""){
       var userToCreate = {};
       userToCreate.username = req.body.username;
       userToCreate.password = req.body.password;
@@ -166,8 +170,8 @@ server.post("/", function(req,res,next){
       }
     });
   }else{
-    var error = {message:'Not all parameters were supplied', code: '0007'};
-    res.status = 400;
+    var error = errors['0001'];
+    res.status = error.code || 500;
     server.log.error(error);
     res.send(error);
   }
@@ -324,7 +328,7 @@ server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
             }
             var hasActive = false;
             var hasMenu = false;
-            if(results.menus.length != 0){
+            if( results && results.menus.length != 0){
               hasMenu = true;
               for(var menuKey in results.menus){
                 if(results.menus[menuKey].active){
@@ -332,6 +336,8 @@ server.get("/setup", verifyToken({secret:secret}), function(req, res, next){
                   break;
                 }
               }
+            }else{
+              return resolve({menu:false, active: false});
             }
 
             return resolve({menu: hasMenu, active: hasActive});
